@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Refeições Pro</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 10px; background-color: #f0f2f5; color: #333; margin-bottom: 50px; }
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #1a73e8; margin-bottom: 20px; }
+        h3 { margin-top: 0; font-size: 1.1em; color: #5f6368; border-bottom: 2px solid #e8eaed; padding-bottom: 8px; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f3f4; }
+        input, textarea { padding: 10px; border: 2px solid #dfe1e5; border-radius: 8px; font-size: 1em; }
+        input[type="number"] { width: 70px; text-align: center; }
+        textarea { width: 100%; box-sizing: border-box; resize: none; font-family: inherit; }
+        .total-container { background: #e8f0fe; padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: bold; color: #1967d2; display: flex; justify-content: space-between; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn { padding: 15px; border: none; border-radius: 8px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+        .btn-limpar { background-color: #d93025; }
+        .btn-whatsapp { background-color: #25d366; }
+        .btn:active { transform: scale(0.98); opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <h2>Refeições Diárias</h2>
+
+    <div class="card">
+        <h3>📍 Turno Único (Cód. 35)</h3>
+        <div id="container-35"></div>
+        <div class="total-container">
+            <span>Total Cód. 35:</span>
+            <span id="res-35">0</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📍 Turno Parcial (Cód. 37)</h3>
+        <div id="container-37"></div>
+        <div class="total-container">
+            <span>Total Cód. 37:</span>
+            <span id="res-37">0</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>👥 Funcionários (Cód. 10)</h3>
+        <div class="row">
+            <span>Quantidade:</span>
+            <input type="number" id="input-10" value="0" min="0" oninput="calcular()">
+        </div>
+        <div class="total-container">
+            <span>Total Cód. 10:</span>
+            <span id="res-10">0</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📝 Observações</h3>
+        <textarea id="obs" rows="3" placeholder="Digite aqui alguma ocorrência..."></textarea>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn btn-limpar" onclick="limparTudo()">Zerar Tudo</button>
+        <button class="btn btn-whatsapp" onclick="enviarWhatsapp()">Enviar Resumo</button>
+    </div>
+
+    <script>
+        const turmas35 = ["1101", "1102", "1103", "1201", "1202", "1301", "1302", "1401", "1402", "1501", "1502"];
+        const turmas37 = ["1601", "1602"];
+
+        function gerarInterface(lista, containerId, sufixo) {
+            const container = document.getElementById(containerId);
+            lista.forEach(t => {
+                const div = document.createElement('div');
+                div.className = 'row';
+                div.innerHTML = `<span>Turma ${t}</span>
+                                 <input type="number" class="input-${sufixo}" value="0" min="0" oninput="calcular()">`;
+                container.appendChild(div);
+            });
+        }
+
+        function calcular() {
+            let total35 = 0;
+            let total37 = 0;
+            document.querySelectorAll('.input-35').forEach(i => total35 += Number(i.value));
+            document.querySelectorAll('.input-37').forEach(i => total37 += Number(i.value));
+            let total10 = Number(document.getElementById('input-10').value);
+
+            document.getElementById('res-35').innerText = total35;
